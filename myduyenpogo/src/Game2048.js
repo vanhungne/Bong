@@ -97,7 +97,7 @@ function Game2048() {
   const [history, setHistory] = useState([]);
   const [anim, setAnim] = useState({});
   const boardRef = useRef();
-  const touch = useRef({x:0,y:0});
+  const touch = useRef({x:0,y:0, handled: false});
 
   useEffect(() => {
     if (score > best) {
@@ -156,21 +156,32 @@ function Game2048() {
     setWon(false);
     setAnim({});
   }
-  // Vuốt trên mobile
+  // Vuốt trên mobile - cải tiến
   function handleTouchStart(e) {
     if (e.touches.length) {
-      touch.current = {x: e.touches[0].clientX, y: e.touches[0].clientY};
+      touch.current = {x: e.touches[0].clientX, y: e.touches[0].clientY, handled: false};
     }
   }
-  function handleTouchEnd(e) {
+  function handleTouchMove(e) {
     if (!touch.current.x && !touch.current.y) return;
-    const dx = e.changedTouches[0].clientX - touch.current.x;
-    const dy = e.changedTouches[0].clientY - touch.current.y;
-    if (Math.abs(dx) > 40 || Math.abs(dy) > 40) {
-      if (Math.abs(dx) > Math.abs(dy)) move(dx > 0 ? 'right' : 'left');
-      else move(dy > 0 ? 'down' : 'up');
+    if (touch.current.handled) return;
+    const dx = e.touches[0].clientX - touch.current.x;
+    const dy = e.touches[0].clientY - touch.current.y;
+    const absDx = Math.abs(dx);
+    const absDy = Math.abs(dy);
+    const threshold = 30; // nhạy hơn
+    if (absDx > threshold || absDy > threshold) {
+      if (absDx > absDy) {
+        move(dx > 0 ? 'right' : 'left');
+      } else {
+        move(dy > 0 ? 'down' : 'up');
+      }
+      touch.current.handled = true;
     }
-    touch.current = {x:0,y:0};
+    e.preventDefault(); // ngăn cuộn trang
+  }
+  function handleTouchEnd(e) {
+    touch.current = {x:0,y:0,handled:false};
   }
 
   return (
@@ -186,6 +197,7 @@ function Game2048() {
         touchAction: 'none',
       }}
       onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
