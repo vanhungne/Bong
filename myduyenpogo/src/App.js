@@ -2,6 +2,7 @@ import './App.css';
 import './BongPage.css';
 import { useEffect, useState } from 'react';
 import GamePaddle from './GamePaddle';
+import Game2048 from './Game2048';
 
 // Thêm mảng hiệu ứng
 const EFFECTS = [
@@ -421,6 +422,7 @@ function Snake() {
 function App() {
   const [bg, setBg] = useState(BG_GRADIENTS[0].value);
   const [showGame, setShowGame] = useState(false);
+  const [show2048, setShow2048] = useState(false);
   return (
     <div className="bong-bg" style={{ background: bg }}>
       <div style={{ position: 'absolute', top: 16, right: 16, zIndex: 100, display: 'flex', gap: 12 }}>
@@ -435,12 +437,20 @@ function App() {
         </select>
         <button
           style={{ padding: '8px 18px', borderRadius: 8, fontWeight: 700, fontSize: 16, background: '#fda085', color: '#fff', border: 'none', boxShadow: '0 2px 8px #fda085', cursor: 'pointer' }}
-          onClick={() => setShowGame(g => !g)}
+          onClick={() => { setShowGame(g => !g); setShow2048(false); }}
         >
           {showGame ? 'Quay lại hiệu ứng' : 'Chơi game thanh chắn'}
         </button>
+        <button
+          style={{ padding: '8px 18px', borderRadius: 8, fontWeight: 700, fontSize: 16, background: '#f76d6d', color: '#fff', border: 'none', boxShadow: '0 2px 8px #f76d6d', cursor: 'pointer' }}
+          onClick={() => { setShow2048(g => !g); setShowGame(false); }}
+        >
+          {show2048 ? 'Quay lại hiệu ứng' : 'Chơi game 2048'}
+        </button>
       </div>
-      {showGame ? (
+      {show2048 ? (
+        <Game2048 />
+      ) : showGame ? (
         <GamePaddle />
       ) : (
         <>

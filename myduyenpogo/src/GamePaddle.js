@@ -140,7 +140,6 @@ function MilestoneOverlay({ type, onClose, gameW, gameH, score }) {
         textAlign: 'center',
         animation: 'popMilestone 0.7s',
       }}>{text}</div>
-      <div style={{color:'#fff',marginTop:24,fontSize:18,opacity:0.8}}>Bấm vào màn hình để tiếp tục</div>
     </div>
   );
 }
@@ -300,6 +299,8 @@ function GamePaddle() {
   // Điều khiển paddle bằng chạm (mobile)
   function handleTouchStart(e) {
     if (e.touches.length > 0) touchId.current = e.touches[0].identifier;
+    // Di chuyển paddle ngay khi chạm
+    handleTouchMove(e);
   }
   function handleTouchMove(e) {
     if (!gameRef.current || paused) return;
@@ -431,7 +432,7 @@ function GamePaddle() {
         }}
       >
         <img src={AVATAR_IMG} alt="paddle" style={{height:28,width:28,borderRadius:'50%',marginRight:8}} />
-        <span>Thanh chắn</span>
+        <span>Bông</span>
       </div>
       {/* Balls */}
       {balls.map(b => (
