@@ -174,15 +174,20 @@ function Game2048() {
   }
 
   return (
-    <div style={{
-      maxWidth: 420, margin: '32px auto', padding: 8, borderRadius: 24,
-      background: 'linear-gradient(135deg, #f8fafc 60%, #fda085 100%)',
-      boxShadow: '0 8px 32px 0 #0002',
-      minHeight: 520, position: 'relative',
-      userSelect: 'none',
-      fontFamily: 'inherit',
-      width: '98vw',
-    }}>
+    <div 
+      style={{
+        maxWidth: 420, margin: '32px auto', padding: 8, borderRadius: 24,
+        background: 'linear-gradient(135deg, #f8fafc 60%, #fda085 100%)',
+        boxShadow: '0 8px 32px 0 #0002',
+        minHeight: 520, position: 'relative',
+        userSelect: 'none',
+        fontFamily: 'inherit',
+        width: '98vw',
+        touchAction: 'none',
+      }}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
       <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
         <div style={{fontWeight:900,fontSize:32,color:'#f76d6d',letterSpacing:2,textShadow:'0 2px 8px #fff7e6'}}>2048</div>
         <div style={{display:'flex',gap:12}}>
@@ -199,11 +204,8 @@ function Game2048() {
         style={{
           background:'#bbada0',borderRadius:18,padding:8,
           display:'grid',gridTemplateColumns:`repeat(${SIZE},1fr)`,gap:8,
-          touchAction:'none',
           minHeight:320,
         }}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
       >
         {board.map((row,r) => row.map((cell,c) => (
           <div key={r+','+c} style={{
