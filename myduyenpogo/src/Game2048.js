@@ -50,22 +50,25 @@ function reverse(board) {
 function moveLeft(board) {
   let moved = false;
   let score = 0;
-  let merged = Array.from({length: SIZE}, () => Array(SIZE).fill(false));
   const newBoard = board.map(row => {
-    let arr = row.filter(x => x !== 0);
-    for (let i = 0; i < arr.length-1; i++) {
-      if (arr[i] && arr[i] === arr[i+1] && !merged[row.indexOf(arr[i])][i] && !merged[row.indexOf(arr[i+1])][i+1]) {
-        arr[i] *= 2;
-        score += arr[i];
-        arr[i+1] = 0;
-        merged[row.indexOf(arr[i])][i] = true;
+    let newRow = [];
+    let skip = false;
+    for (let i = 0; i < SIZE; i++) {
+      if (row[i] === 0) continue;
+      if (!skip && i < SIZE - 1 && row[i] === row[i + 1] && row[i] !== 0) {
+        newRow.push(row[i] * 2);
+        score += row[i] * 2;
+        skip = true;
+        moved = true;
+      } else {
+        if (!skip) newRow.push(row[i]);
+        skip = false;
       }
     }
-    arr = arr.filter(x => x !== 0);
-    while (arr.length < SIZE) arr.push(0);
-    return arr;
+    while (newRow.length < SIZE) newRow.push(0);
+    if (!moved && newRow.some((v, idx) => v !== row[idx])) moved = true;
+    return newRow;
   });
-  if (JSON.stringify(newBoard) !== JSON.stringify(board)) moved = true;
   return { board: newBoard, moved, score };
 }
 function moveRight(board) {
@@ -112,18 +115,18 @@ function Game2048() {
   }, [board]);
 
   useEffect(() => {
-    const handleKey = e => {
+    function handleKey(e) {
       if (gameOver || won) return;
-      if (['ArrowLeft','a','A'].includes(e.key)) move('left');
-      if (['ArrowRight','d','D'].includes(e.key)) move('right');
-      if (['ArrowUp','w','W'].includes(e.key)) move('up');
-      if (['ArrowDown','s','S'].includes(e.key)) move('down');
-      if (e.ctrlKey && e.key === 'z') undo();
-      if (e.key === 'r' || e.key === 'R') restart();
-    };
-    window.addEventListener('keydown', handleKey);
+      if (['ArrowLeft','a','A'].includes(e.key)) { e.preventDefault(); move('left'); }
+      else if (['ArrowRight','d','D'].includes(e.key)) { e.preventDefault(); move('right'); }
+      else if (['ArrowUp','w','W'].includes(e.key)) { e.preventDefault(); move('up'); }
+      else if (['ArrowDown','s','S'].includes(e.key)) { e.preventDefault(); move('down'); }
+      else if (e.ctrlKey && (e.key === 'z' || e.key === 'Z')) { e.preventDefault(); undo(); }
+      else if (e.key === 'r' || e.key === 'R') { e.preventDefault(); restart(); }
+    }
+    window.addEventListener('keydown', handleKey, { passive: false });
     return () => window.removeEventListener('keydown', handleKey);
-  });
+  }, [gameOver, won, board, score]);
 
   function move(dir) {
     let fn = moveLeft;
