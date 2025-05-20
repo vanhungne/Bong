@@ -441,19 +441,19 @@ function App() {
           style={{ padding: '8px 18px', borderRadius: 8, fontWeight: 700, fontSize: 16, background: '#fda085', color: '#fff', border: 'none', boxShadow: '0 2px 8px #fda085', cursor: 'pointer' }}
           onClick={() => { setShowGame(g => !g); setShow2048(false); setShowSnake(false); }}
         >
-          {showGame ? 'Quay lại hiệu ứng' : 'Chơi game thanh chắn'}
+          {showGame ? 'Quay lại hiệu ứng' : 'thanh chắn'}
         </button>
         <button
           style={{ padding: '8px 18px', borderRadius: 8, fontWeight: 700, fontSize: 16, background: '#f76d6d', color: '#fff', border: 'none', boxShadow: '0 2px 8px #f76d6d', cursor: 'pointer' }}
           onClick={() => { setShow2048(g => !g); setShowGame(false); setShowSnake(false); }}
         >
-          {show2048 ? 'Quay lại hiệu ứng' : 'Chơi game 2048'}
+          {show2048 ? 'Quay lại hiệu ứng' : '2048'}
         </button>
         <button
           style={{ padding: '8px 18px', borderRadius: 8, fontWeight: 700, fontSize: 16, background: '#43cea2', color: '#fff', border: 'none', boxShadow: '0 2px 8px #43cea2', cursor: 'pointer' }}
           onClick={() => { setShowSnake(g => !g); setShowGame(false); setShow2048(false); }}
         >
-          {showSnake ? 'Quay lại hiệu ứng' : 'Chơi game Snake'}
+          {showSnake ? 'Quay lại hiệu ứng' : 'Snake'}
         </button>
       </div>
       {showSnake ? (
